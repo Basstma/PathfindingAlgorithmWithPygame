@@ -6,7 +6,7 @@ from Maze import *
 
 class Visio:
     def __init__(self):
-        self.maze = Maze(size=(50, 50))
+        self.maze = Maze(size=(100, 100))
         self.scale = 10
 
         self.running = True
