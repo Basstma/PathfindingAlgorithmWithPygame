@@ -6,8 +6,8 @@ from Maze import *
 
 class Visio:
     def __init__(self):
-        self.maze = Maze(size=(100, 100))
-        self.scale = 10
+        self.maze = Maze(size=(500, 500))
+        self.scale = 2
 
         self.running = True
 
@@ -45,5 +45,5 @@ class Visio:
 
 if __name__ == '__main__':
     v = Visio()
-    time.sleep(0.5)
+    time.sleep(0.0001)
     v.run()

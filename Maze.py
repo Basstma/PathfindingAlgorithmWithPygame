@@ -58,7 +58,7 @@ class Maze:
             actual_point = neighbor[np.random.randint(0, len(neighbor))]
             actual = points[str(actual_point[0]) + ':' + str(actual_point[1])]
 
-            time.sleep(0.001)
+            #time.sleep(0.001)
 
 
 
