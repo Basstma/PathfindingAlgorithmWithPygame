@@ -11,11 +11,19 @@ class Bot:
         self.maze = maze
 
     def find_target(self):
-        find = Thread(target=self.random_search())
+        find = Thread(target=self.random_search)
         find.start()
 
     def random_search(self):
+        def find_neighbours(neig):
+            nbs = []
+            for element in neig:
+                if type(self.maze.maze[self.position.y + element[1]][self.position.x + element[0]]) != Wall:
+                    nbs.append(element)
+            return nbs
+
         neighbours = self.position.get_possible_switch(self.maze.size)
+        neighbours = find_neighbours(neighbours)
 
         n = neighbours[np.random.randint(0, len(neighbours))]
         next_position = self.maze.maze[n[1]][n[0]]
@@ -23,7 +31,8 @@ class Bot:
         while next_position != type(Target):
             self.position.change(x_change=n[0], y_change=n[1])
             neighbours = self.position.get_possible_switch(self.maze.size)
+            neighbours = find_neighbours(neighbours)
             n = neighbours[np.random.randint(0, len(neighbours))]
             next_position = self.maze.maze[n[1]][n[0]]
-            time.sleep(1)
+            time.sleep(0.1)
 

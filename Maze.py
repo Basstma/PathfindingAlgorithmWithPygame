@@ -70,7 +70,7 @@ class Maze:
                     actual = points[point]
 
             actual_name = str(actual_point[0]) + ':' + str(actual_point[1])
-            time.sleep(0.001)
+            #time.sleep(0.001)
         self.add_target()
 
     def add_target(self):

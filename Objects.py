@@ -41,7 +41,6 @@ class Positon:
         if self.y + 1 < size[1]:
             switches.append((0, 1))
         if self.y - 1 >= 0:
-            print(self.y)
             switches.append((0, -1))
 
         return switches

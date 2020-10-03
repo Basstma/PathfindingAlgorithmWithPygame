@@ -7,7 +7,7 @@ from Bot import *
 
 class Visio:
     def __init__(self):
-        self.maze = Maze(size=(10, 10))
+        self.maze = Maze(size=(30, 30))
         self.bot = None
         self.scale = 10
 
@@ -38,7 +38,6 @@ class Visio:
 
     def draw_bot(self):
         if self.bot:
-            print(self.bot.position.get_coordinates())
             pg.draw.rect(self.screen, self.colors["green"],
                          (self.bot.position.y * self.scale, self.bot.position.x * self.scale, self.scale, self.scale))
 
