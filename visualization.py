@@ -2,12 +2,14 @@ import pygame as pg
 import time
 
 from Maze import *
+from Bot import *
 
 
 class Visio:
     def __init__(self):
-        self.maze = Maze(size=(500, 500))
-        self.scale = 2
+        self.maze = Maze(size=(10, 10))
+        self.bot = None
+        self.scale = 10
 
         self.running = True
 
@@ -30,6 +32,15 @@ class Visio:
                 if type(self.maze.maze[i][j]) == Wall:
                     pg.draw.rect(self.screen, self.colors["white"],
                                  (j * self.scale, i * self.scale, self.scale, self.scale))
+                elif type(self.maze.maze[i][j]) == Target:
+                    pg.draw.rect(self.screen, self.colors["red"],
+                                 (j * self.scale, i * self.scale, self.scale, self.scale))
+
+    def draw_bot(self):
+        if self.bot:
+            print(self.bot.position.get_coordinates())
+            pg.draw.rect(self.screen, self.colors["green"],
+                         (self.bot.position.y * self.scale, self.bot.position.x * self.scale, self.scale, self.scale))
 
     def run(self):
         while self.running:
@@ -38,7 +49,13 @@ class Visio:
                 if event.type == pg.KEYDOWN:
                     if event.key == pg.K_s:
                         self.maze.build()
+                    if event.key == pg.K_w:
+                        if self.bot:
+                            self.bot.find_target()
+                        else:
+                            self.bot = Bot(self.maze)
             self.draw_map()
+            self.draw_bot()
             pg.display.flip()
             self.clock.tick(self.FPS)
 

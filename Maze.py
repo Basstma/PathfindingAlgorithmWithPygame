@@ -10,12 +10,12 @@ class Maze:
         self.size = size
         self.maze = [[None for i in range(self.size[0])] for j in range(self.size[1])]
 
-        #for i in range(self.size[1]):
-        #    for j in range(self.size[0]):
-        #        if i == 0 or i == self.size[1]-1:
-        #            self.maze[i][j] = Wall(x=j, y=i)
-        #        if j == 0 or j == self.size[0]-1:
-        #            self.maze[i][j] = Wall(x=j, y=i)
+        """for i in range(self.size[1]):
+            for j in range(self.size[0]):
+                if i == 0 or i == self.size[1]-1:
+                    self.maze[i][j] = Wall(x=j, y=i)
+                if j == 0 or j == self.size[0]-1:
+                    self.maze[i][j] = Wall(x=j, y=i)"""
 
         self.pos = {}
 
@@ -24,13 +24,15 @@ class Maze:
         creation.start()
 
     def create(self):
-        np.random.seed(66)
-        actual_point = (0, 2)
+        np.random.seed(69)
+        actual_point = (0, 1)
+        already_visited = []
         points = {
             str(actual_point[0]) + ':' + str(actual_point[1]): self.maze[actual_point[1]][actual_point[0]]
         }
 
-        actual = points[str(actual_point[0]) + ':' + str(actual_point[1])]
+        actual_name = str(actual_point[0]) + ':' + str(actual_point[1])
+        actual = points[actual_name]
 
         while points.keys():
             """
@@ -38,29 +40,49 @@ class Maze:
             Only not if they already in points. Than look if this point is a Wall if yes: 
                 If more than one wall returned than self cant be an new wall
             """
+            nbs = []
             if not actual:
                 actual = Positon(actual_point[0], actual_point[1])
             neighbor = actual.get_neighbor(self.size)
             wall_count = 0
             for p in neighbor:
                 p_name = str(p[0]) + ':' + str(p[1])
-                if p_name not in points.keys():
+                if p_name not in points.keys() and p_name not in already_visited:
                     points[p_name] = self.maze[p[1]][p[0]]
-                if type(points[p_name]) == Wall:
+                    nbs.append(p)
+                if type(self.maze[p[1]][p[0]]) == Wall:
                     wall_count += 1
 
             if wall_count <= 1: #np.random.randint(1, 3):
                 self.maze[actual_point[1]][actual_point[0]] = Wall(actual_point[0], actual_point[1])
                 points[str(actual_point[0]) + ':' + str(actual_point[1])] = self.maze[actual_point[1]][actual_point[0]]
 
-            del points[str(actual_point[0]) + ':' + str(actual_point[1])]
+            already_visited.append(actual_name)
+            del points[actual_name]
 
-            actual_point = neighbor[np.random.randint(0, len(neighbor))]
-            actual = points[str(actual_point[0]) + ':' + str(actual_point[1])]
+            if nbs:
+                actual_point = nbs[np.random.randint(0, len(nbs))]
+                actual = points[str(actual_point[0]) + ':' + str(actual_point[1])]
+            else:
+                if list(points.keys()):
+                    point = np.random.choice(list(points.keys()))
+                    actual_point = [int(number) for number in point.split(':')]
+                    actual = points[point]
 
-            #time.sleep(0.001)
+            actual_name = str(actual_point[0]) + ':' + str(actual_point[1])
+            time.sleep(0.001)
+        self.add_target()
 
+    def add_target(self):
+        x = np.random.randint(0, self.size[0])
+        y = np.random.randint(0, self.size[1])
 
+        if np.random.randint(0, 2) == 1:
+            x = np.random.choice([0, self.size[0] - 1])
+        else:
+            y = np.random.choice([0, self.size[1] - 1])
+
+        self.maze[y][x] = Target(x=x, y=y)
 
 
 if __name__ == '__main__':
