@@ -4,11 +4,12 @@ import time
 from Maze import *
 from Bot import *
 from depthsearch import *
+from widesearch import *
 
 
 class Visio:
     def __init__(self):
-        self.maze = Maze(size=(100, 100))
+        self.maze = Maze(size=(50, 50))
         self.bot = None
         self.scale = 10
 
@@ -66,6 +67,9 @@ class Visio:
                     if event.key == pg.K_d:
                         d = DepthSearch(self.maze, (1, 0))
                         d.start()
+                    if event.key == pg.K_f:
+                        w = WideSearch(self.maze, (1, 0))
+                        w.start()
                     if event.key == pg.K_0:
                         self.maze.add_target()
                     if event.key == pg.K_1:
@@ -85,8 +89,8 @@ class Visio:
                         x = int((pos[0] - (pos[0] % self.scale)) / self.scale)
                         y = int((pos[1] - (pos[1] % self.scale)) / self.scale)
                         self.maze.maze[y][x] = Wall(x=x, y=y)
-                if event.type == pg.QUIT:
-                    raise SystemExit
+                """if event.type == pg.QUIT:
+                    raise SystemExit"""
             self.draw_map()
             self.draw_bot()
             pg.display.flip()
