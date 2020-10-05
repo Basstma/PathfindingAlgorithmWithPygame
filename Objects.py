@@ -45,6 +45,7 @@ class Positon:
 
         return switches
 
+
 class Wall(Positon):
     def __init__(self, x, y):
         super().__init__(x, y)
@@ -54,4 +55,13 @@ class Target(Positon):
     def __init__(self, x, y):
         super().__init__(x, y)
 
+
+class Visited(Positon):
+    def __init__(self, x, y):
+        super().__init__(x, y)
+
+
+class Way(Positon):
+    def __init__(self, x, y):
+        super().__init__(x, y)
 

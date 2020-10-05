@@ -24,7 +24,7 @@ class Maze:
         creation.start()
 
     def create(self):
-        np.random.seed(69)
+        #np.random.seed(69)
         actual_point = (0, 1)
         already_visited = []
         points = {
@@ -53,7 +53,7 @@ class Maze:
                 if type(self.maze[p[1]][p[0]]) == Wall:
                     wall_count += 1
 
-            if wall_count <= 1: #np.random.randint(1, 3):
+            if wall_count <= 1 and np.random.randint(0, 10) != 1:
                 self.maze[actual_point[1]][actual_point[0]] = Wall(actual_point[0], actual_point[1])
                 points[str(actual_point[0]) + ':' + str(actual_point[1])] = self.maze[actual_point[1]][actual_point[0]]
 
@@ -71,16 +71,22 @@ class Maze:
 
             actual_name = str(actual_point[0]) + ':' + str(actual_point[1])
             #time.sleep(0.001)
-        self.add_target()
 
-    def add_target(self):
-        x = np.random.randint(0, self.size[0])
-        y = np.random.randint(0, self.size[1])
+    def add_target(self, kind='standard'):
+        if kind == 'standard':
+            x = np.random.randint(0, self.size[0])
+            y = np.random.randint(0, self.size[1])
 
-        if np.random.randint(0, 2) == 1:
-            x = np.random.choice([0, self.size[0] - 1])
+            if np.random.randint(0, 2) == 1:
+                x = np.random.choice([0, self.size[0] - 1])
+            else:
+                y = np.random.choice([0, self.size[1] - 1])
+        elif kind == 'random':
+            x = np.random.randint(0, self.size[0])
+            y = np.random.randint(0, self.size[1])
         else:
-            y = np.random.choice([0, self.size[1] - 1])
+            x = self.size[0] - 1
+            y = self.size[1] - 1
 
         self.maze[y][x] = Target(x=x, y=y)
 
