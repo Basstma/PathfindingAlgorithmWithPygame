@@ -1,5 +1,6 @@
 import numpy as np
 
-if []:
-    print("LEer")
+
+test = [1, 2, 3, 4]
+print(test[-1])
 

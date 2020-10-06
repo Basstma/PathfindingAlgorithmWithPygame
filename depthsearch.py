@@ -32,7 +32,7 @@ class DepthSearch(Thread):
             return neighbours
 
         for neighbour in neighbours:
-            time.sleep(0.001)
+            time.sleep(self.maze.delay)
             res = self.depthsearch(start=neighbour)
             if res:
                 return res
@@ -40,10 +40,15 @@ class DepthSearch(Thread):
         return None
 
     def clean_path(self):
+        start = True
         for pos in self.path_to_target.keys():
-            self.maze.maze[self.path_to_target[pos].y][self.path_to_target[pos].x] = \
-                Way(x=[self.path_to_target[pos].x], y=[self.path_to_target[pos].y])
-
+            if start:
+                self.maze.maze[self.path_to_target[pos].y][self.path_to_target[pos].x] = \
+                    Start(x=[self.path_to_target[pos].x], y=[self.path_to_target[pos].y])
+                start = False
+            else:
+                self.maze.maze[self.path_to_target[pos].y][self.path_to_target[pos].x] = \
+                    Way(x=[self.path_to_target[pos].x], y=[self.path_to_target[pos].y])
     def run(self):
         self.depthsearch(self.start_position)
         self.clean_path()

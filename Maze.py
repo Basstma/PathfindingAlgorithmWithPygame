@@ -9,6 +9,7 @@ class Maze:
     def __init__(self, size):
         self.size = size
         self.maze = [[None for i in range(self.size[0])] for j in range(self.size[1])]
+        self.delay = 0
 
         """for i in range(self.size[1]):
             for j in range(self.size[0]):
@@ -70,7 +71,7 @@ class Maze:
                     actual = points[point]
 
             actual_name = str(actual_point[0]) + ':' + str(actual_point[1])
-            #time.sleep(0.001)
+            time.sleep(self.delay)
 
     def add_target(self, kind='standard'):
         if kind == 'standard':

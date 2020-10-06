@@ -56,6 +56,11 @@ class Target(Positon):
         super().__init__(x, y)
 
 
+class Start(Positon):
+    def __init__(self, x, y):
+        super().__init__(x, y)
+
+
 class Visited(Positon):
     def __init__(self, x, y):
         super().__init__(x, y)
