@@ -60,6 +60,7 @@ class WideSearch(Thread):
                     start = False
                 else:
                     self.maze.maze[object.y][object.x] = Way(x=object.x, y=object.y)
+                time.sleep(self.maze.delay)
 
     def run(self):
         self.widesearch()

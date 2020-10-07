@@ -72,6 +72,7 @@ class Maze:
 
             actual_name = str(actual_point[0]) + ':' + str(actual_point[1])
             time.sleep(self.delay)
+        print("Maze is builded")
 
     def add_target(self, kind='standard'):
         if kind == 'standard':

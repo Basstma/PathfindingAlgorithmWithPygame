@@ -9,9 +9,9 @@ from widesearch import *
 
 class Visio:
     def __init__(self):
-        self.maze = Maze(size=(50, 50))
+        self.maze = Maze(size=(80, 80))
         self.bot = None
-        self.scale = 10
+        self.scale = 5
 
         self.running = True
 
