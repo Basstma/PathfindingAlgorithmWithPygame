@@ -9,9 +9,9 @@ from widesearch import *
 
 class Visio:
     def __init__(self):
-        self.maze = Maze(size=(80, 80))
+        self.maze = Maze(size=(40, 40))
         self.bot = None
-        self.scale = 5
+        self.scale = 10
 
         self.running = True
 
@@ -64,16 +64,16 @@ class Visio:
                     if event.key == pg.K_s:
                         print("Build Maze")
                         self.maze.build()
-                    if event.key == pg.K_w:
-                        if self.bot:
-                            print("Bot is searching!")
-                            self.bot.find_target()
-                        else:
-                            print("Bot is builded")
-                            self.bot = Bot(self.maze)
-                    if event.key == pg.K_q:
-                        print("Bot deleted")
-                        self.bot = None
+                    # if event.key == pg.K_w:
+                    #     if self.bot:
+                    #         print("Bot is searching!")
+                    #         self.bot.find_target()
+                    #     else:
+                    #         print("Bot is builded")
+                    #         self.bot = Bot(self.maze)
+                    # if event.key == pg.K_q:
+                    #     print("Bot deleted")
+                    #     self.bot = None
                     if event.key == pg.K_d:
                         print("Depth search started")
                         d = DepthSearch(self.maze, (1, 0))
