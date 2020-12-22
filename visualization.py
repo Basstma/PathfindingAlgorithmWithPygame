@@ -9,9 +9,13 @@ from widesearch import *
 
 class Visio:
     def __init__(self):
-        self.maze = Maze(size=(40, 40))
+        self.maze = Maze(size=(50, 40))
         self.bot = None
         self.scale = 10
+
+        self.window_size = (500, 500)
+        self.navbar_size = (self.window_size[0], 100)
+        self.maze_size = self.maze.size * 10
 
         self.running = True
 
@@ -29,32 +33,33 @@ class Visio:
                        "grey_one": (50, 50, 50)}
 
         self.clock = pg.time.Clock()
-        self.screen = pg.display.set_mode((self.maze.size[0] * self.scale, self.maze.size[1] * self.scale))
+        self.screen = pg.display.set_mode(self.window_size)
         self.FPS = 60
 
+    def build_naviagation(self):
+        pass
+
     def draw_map(self):
+        def draw_rectangle_maze(pos: list, color: str):
+            pg.draw.rect(self.screen, self.colors[color],
+                         (pos[0] * self.scale, (pos[1] * self.scale) + self.navbar_size[1], self.scale, self.scale))
+
         for i in range(0, self.maze.size[1]):
             for j in range(0, self.maze.size[0]):
                 if type(self.maze.maze[i][j]) == Wall:
-                    pg.draw.rect(self.screen, self.colors["white"],
-                                 (j * self.scale, i * self.scale, self.scale, self.scale))
-                elif type(self.maze.maze[i][j]) == Target:
-                    pg.draw.rect(self.screen, self.colors["red"],
-                                 (j * self.scale, i * self.scale, self.scale, self.scale))
-                elif type(self.maze.maze[i][j]) == Visited:
-                    pg.draw.rect(self.screen, self.colors["grey_one"],
-                                 (j * self.scale, i * self.scale, self.scale, self.scale))
-                elif type(self.maze.maze[i][j]) == Way:
-                    pg.draw.rect(self.screen, self.colors["turquoise"],
-                                 (j * self.scale, i * self.scale, self.scale, self.scale))
-                elif type(self.maze.maze[i][j]) == Start:
-                    pg.draw.rect(self.screen, self.colors["green"],
-                                 (j * self.scale, i * self.scale, self.scale, self.scale))
+                    draw_rectangle_maze((j, i), "white")
 
-    def draw_bot(self):
-        if self.bot:
-            pg.draw.rect(self.screen, self.colors["yellow"],
-                         (self.bot.position.y * self.scale, self.bot.position.x * self.scale, self.scale, self.scale))
+                elif type(self.maze.maze[i][j]) == Target:
+                    draw_rectangle_maze((j, i), "red")
+
+                elif type(self.maze.maze[i][j]) == Visited:
+                    draw_rectangle_maze((j, i), "grey_one")
+
+                elif type(self.maze.maze[i][j]) == Way:
+                    draw_rectangle_maze((j, i), "turquoise")
+
+                elif type(self.maze.maze[i][j]) == Start:
+                    draw_rectangle_maze((j, i), "green")
 
     def run(self):
         while self.running:
@@ -64,21 +69,11 @@ class Visio:
                     if event.key == pg.K_s:
                         print("Build Maze")
                         self.maze.build()
-                    # if event.key == pg.K_w:
-                    #     if self.bot:
-                    #         print("Bot is searching!")
-                    #         self.bot.find_target()
-                    #     else:
-                    #         print("Bot is builded")
-                    #         self.bot = Bot(self.maze)
-                    # if event.key == pg.K_q:
-                    #     print("Bot deleted")
-                    #     self.bot = None
                     if event.key == pg.K_d:
                         print("Depth search started")
                         d = DepthSearch(self.maze, (1, 0))
                         d.start()
-                    if event.key == pg.K_f:
+                    if event.key == pg.K_w:
                         print("Wide search started")
                         w = WideSearch(self.maze, (1, 0))
                         w.start()
@@ -107,22 +102,37 @@ class Visio:
                         print("Delay auf:", self.time_steps[self.time_pos])
                         self.maze.delay = self.time_steps[self.time_pos]
                 if event.type == pg.MOUSEBUTTONDOWN:
-                    if event.button == 1:
-                        pos = pg.mouse.get_pos()
-                        x = int((pos[0] - (pos[0] % self.scale)) / self.scale)
-                        y = int((pos[1] - (pos[1] % self.scale)) / self.scale)
-                        self.maze.maze[y][x] = None
-                    if event.button == 3:
-                        pos = pg.mouse.get_pos()
-                        x = int((pos[0] - (pos[0] % self.scale)) / self.scale)
-                        y = int((pos[1] - (pos[1] % self.scale)) / self.scale)
-                        self.maze.maze[y][x] = Wall(x=x, y=y)
+                    is_hold = True
+                    while is_hold:
+                        if event.button == 1:
+                            x, y = self.get_position_in_maze(pg.mouse.get_pos())
+                            if (x and y) or (x == 0 or y == 0):
+                                self.maze.maze[y][x] = None
+                        if event.button == 3:
+                            x, y = self.get_position_in_maze(pg.mouse.get_pos())
+                            print(x, y)
+                            if (x and y) or (x == 0 or y == 0):
+                                print(x)
+                                self.maze.maze[y][x] = Wall(x=x, y=y)
+                        for e in pg.event.get():
+                            if e.type == pg.MOUSEBUTTONUP:
+                                is_hold = False
+                        self.draw_map()
+                        pg.display.flip()
                 """if event.type == pg.QUIT:
                     raise SystemExit"""
             self.draw_map()
-            self.draw_bot()
             pg.display.flip()
             self.clock.tick(self.FPS)
+
+    def get_position_in_maze(self, pos: list) -> list:
+        pos = (pos[0], pos[1]-self.navbar_size[1])
+        x = int((pos[0] - (pos[0] % self.scale)) / self.scale)
+        y = int((pos[1] - (pos[1] % self.scale)) / self.scale)
+        if x >= self.maze.size[0] or x < 0 or y >= self.maze.size[1] or y < 0:
+            return None, None
+        else:
+            return x, y
 
 
 if __name__ == '__main__':
