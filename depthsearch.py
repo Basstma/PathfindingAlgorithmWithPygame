@@ -6,10 +6,13 @@ from Objects import *
 
 
 class DepthSearch(Thread):
-    def __init__(self, maze, start):
+    def __init__(self, maze):
         super().__init__()
         self.maze = maze
-        self.start_position = start
+        if self.maze.start:
+            self.start_position = self.maze.start.get_coordinates()
+        else:
+            self.maze.stat_position = (0, 0)
         self.path_to_target = {}
 
     def clean_neighbours(self, akt_pos, nbs):

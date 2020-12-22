@@ -12,6 +12,8 @@ class Maze:
         self.delay = 0
 
         self.pos = {}
+        self.start = None
+        self.target = None
 
     def build(self):
         creation = Thread(target=self.create)
@@ -67,25 +69,42 @@ class Maze:
             time.sleep(self.delay)
         print("Maze is builded")
 
-    def add_target(self, kind='standard'):
-        if kind == 'standard':
-            x = np.random.randint(0, self.size[0])
-            y = np.random.randint(0, self.size[1])
+    def add_target(self, x, y):
+        self.target = Target(x=x, y=y)
+        self.maze[y][x] = self.target
+        # if kind == 'standard':
+        #     x = np.random.randint(0, self.size[0])
+        #     y = np.random.randint(0, self.size[1])
+        #
+        #     if np.random.randint(0, 2) == 1:
+        #         x = np.random.choice([0, self.size[0] - 1])
+        #     else:
+        #         y = np.random.choice([0, self.size[1] - 1])
+        # elif kind == 'random':
+        #     x = np.random.randint(0, self.size[0])
+        #     y = np.random.randint(0, self.size[1])
+        # else:
+        #     x = self.size[0] - 1
+        #     y = self.size[1] - 1
+        #
+        # self.maze[y][x] = Target(x=x, y=y)
+        # print("Target added", x, y)
 
-            if np.random.randint(0, 2) == 1:
-                x = np.random.choice([0, self.size[0] - 1])
-            else:
-                y = np.random.choice([0, self.size[1] - 1])
-        elif kind == 'random':
-            x = np.random.randint(0, self.size[0])
-            y = np.random.randint(0, self.size[1])
-        else:
-            x = self.size[0] - 1
-            y = self.size[1] - 1
+    def add_start(self, x, y):
+        self.start = Start(x=x, y=y)
+        self.maze[y][x] = self.start
 
-        self.maze[y][x] = Target(x=x, y=y)
-        print("Target added", x, y)
+    def move_start(self, nx, ny):
+        x, y = self.start.get_coordinates()
+        self.start.set_coordinates(nx, ny)
+        self.maze[y][x] = None
+        self.maze[ny][nx] = self.start
 
+    def move_target(self, nx, ny):
+        x, y = self.target.get_coordinates()
+        self.target.set_coordinates(nx, ny)
+        self.maze[y][x] = None
+        self.maze[ny][nx] = self.target
 
 if __name__ == '__main__':
     m = Maze(size=(10, 10))

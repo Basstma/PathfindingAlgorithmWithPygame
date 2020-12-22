@@ -6,10 +6,13 @@ from Objects import *
 
 
 class WideSearch(Thread):
-    def __init__(self, maze, start):
+    def __init__(self, maze):
         super().__init__()
         self.maze = maze
-        self.start_position = start
+        if self.maze.start:
+            self.start_position = self.maze.start.get_coordinates()
+        else:
+            self.maze.stat_position = (0, 0)
         self.posisions = {}
         self.way_to_target = {}
         self.path = None
