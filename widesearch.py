@@ -18,7 +18,6 @@ class WideSearch(Thread):
         self.path = None
 
     def clean_neighbours(self, akt_pos, nbs):
-
         re = []
         for n in nbs:
             if not self.maze.maze[akt_pos.y + n[1]][akt_pos.x + n[0]]:
@@ -46,7 +45,6 @@ class WideSearch(Thread):
                     self.posisions[new_name] = Visited(x=neighbour[0], y=neighbour[1])
                     self.way_to_target[new_name] = self.way_to_target[name].copy()
                     self.way_to_target[new_name].append(self.posisions[new_name])
-                #del self.way_to_target[name]
                 del self.posisions[list(self.posisions.keys())[0]]
                 if not list(self.posisions.keys()):
                     break

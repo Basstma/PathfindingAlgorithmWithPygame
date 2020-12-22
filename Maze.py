@@ -72,23 +72,6 @@ class Maze:
     def add_target(self, x, y):
         self.target = Target(x=x, y=y)
         self.maze[y][x] = self.target
-        # if kind == 'standard':
-        #     x = np.random.randint(0, self.size[0])
-        #     y = np.random.randint(0, self.size[1])
-        #
-        #     if np.random.randint(0, 2) == 1:
-        #         x = np.random.choice([0, self.size[0] - 1])
-        #     else:
-        #         y = np.random.choice([0, self.size[1] - 1])
-        # elif kind == 'random':
-        #     x = np.random.randint(0, self.size[0])
-        #     y = np.random.randint(0, self.size[1])
-        # else:
-        #     x = self.size[0] - 1
-        #     y = self.size[1] - 1
-        #
-        # self.maze[y][x] = Target(x=x, y=y)
-        # print("Target added", x, y)
 
     def add_start(self, x, y):
         self.start = Start(x=x, y=y)

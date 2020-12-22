@@ -1,3 +1,5 @@
+from typing import Tuple
+
 import pygame as pg
 import time
 
@@ -15,7 +17,6 @@ class Visio:
         self.window_size = (500, 500)
 
         self.navbar_size = (self.window_size[0], 100)
-        print(int(self.window_size[0]/self.scale), int((self.window_size[1]-self.navbar_size[1])/self.scale))
         self.maze = Maze(
             size=(int(self.window_size[0]/self.scale), int((self.window_size[1]-self.navbar_size[1])/self.scale))
         )
@@ -24,7 +25,7 @@ class Visio:
 
         self.running = True
 
-        self.time_steps = [0.00001, 0.0001, 0.001, 0.01, 0.1, 0.5, 1]
+        self.time_steps = [0.00001, 0.0001, 0.001, 0.01, 0.1]
         self.time_pos = 0
 
         self.colors = {
@@ -33,10 +34,14 @@ class Visio:
             "red": (255, 0, 0),
             "green": (0, 255, 0),
             "blue": (0, 0, 255),
+            "blue_depthsearch": (66, 135, 245),
+            "blue_widesearch": (47, 115, 224),
             "yellow": (255, 255, 0),
             "pink": (255, 0, 255),
             "turquoise": (0, 255, 255),
-            "grey_one": (50, 50, 50)}
+            "grey_one": (50, 50, 50),
+            "grey_two": (100, 100, 100),
+            "grey_three": (150, 150, 150)}
 
         self.active_drawing = {
             "mannual": False,
@@ -52,18 +57,25 @@ class Visio:
             Button((5, 5), (40, 20), self.colors["white"], function=self.activate_manual_drawing),  # Button Manual draw
             Button((50, 5), (40, 20), self.colors["red"], function=self.activate_target_drawing),  # Button for Target draw
             Button((95, 5), (40, 20), self.colors["green"], function=self.activate_start_drawing),  # Button for Start draw
+            Button((5, 30), (40, 20), self.colors["blue_widesearch"], function=self.depthsearch),  # Button for widesearch
+            Button((50, 30), (40, 20), self.colors["blue_depthsearch"], function=self.widesearch),  # Button for depthserch
+            Button((5, 55), (40, 20), self.colors["yellow"], function=self.maze.build),  # Button for Build Maze draw
+            Button((50, 55), (40, 20), self.colors["grey_three"], function=self.reset_search),  # Button for remove everything from an search
+            Button((140, 55), (40, 20), self.colors["grey_three"], function=self.reset_expect_wall),  # Button for remove everything excpect walls
+            Button((95, 55), (40, 20), self.colors["grey_three"], function=self.reset),  # Button for reseting
         ]
 
     def build_naviagation(self):
         for button in self.buttons:
             button.draw(self.screen)
 
-        # pg.draw.line(self.screen,
-        #              color=self.colors["white"],
-        #              start_pos=(0, self.navbar_size[1]),
-        #              end_pos=(self.window_size[0], self.navbar_size[1]))
+        pg.draw.line(self.screen,
+                     color=self.colors["white"],
+                     start_pos=(0, self.navbar_size[1] - 2),
+                     end_pos=(self.window_size[0], self.navbar_size[1] - 2),
+                     width=2)
 
-    def check_button_is_clicked(self,click_pos):
+    def check_button_is_clicked(self, click_pos):
         for button in self.buttons:
             if button.is_clicked(click_pos):
                 button.action()
@@ -77,7 +89,6 @@ class Visio:
             for j in range(0, self.maze.size[0]):
                 if type(self.maze.maze[i][j]) == Wall:
                     draw_rectangle_maze((j, i), "white")
-
                 elif type(self.maze.maze[i][j]) == Target:
                     draw_rectangle_maze((j, i), "red")
 
@@ -98,28 +109,6 @@ class Visio:
             self.screen.fill(self.colors["black"])
             for event in pg.event.get():
                 if event.type == pg.KEYDOWN:
-                    if event.key == pg.K_s:
-                        print("Build Maze")
-                        self.maze.build()
-                    if event.key == pg.K_d:
-                        print("Depth search started")
-                        d = DepthSearch(self.maze)
-                        d.start()
-                    if event.key == pg.K_w:
-                        print("Wide search started")
-                        w = WideSearch(self.maze)
-                        w.start()
-                    if event.key == pg.K_n:
-                        print("Reseted Maze")
-                        self.maze = Maze(size=self.maze.size)
-                        self.maze.start = None
-                    if event.key == pg.K_r:
-                        print("Start removing every sign except Walls")
-                        for i in range(len(self.maze.maze)):
-                            for j in range(len(self.maze.maze[i])):
-                                if type(self.maze.maze[i][j]) != Wall:
-                                    self.maze.maze[i][j] = None
-                        self.maze.start = None
                     if event.key == pg.K_t:
                         self.change_timedelay()
                 if event.type == pg.MOUSEBUTTONDOWN:
@@ -206,7 +195,7 @@ class Visio:
             self.display()
             pg.display.flip()
 
-    def get_position_in_maze(self, pos: list) -> list:
+    def get_position_in_maze(self, pos: list) -> Tuple:
         pos = (pos[0], pos[1]-self.navbar_size[1])
         x = int((pos[0] - (pos[0] % self.scale)) / self.scale)
         y = int((pos[1] - (pos[1] % self.scale)) / self.scale)
@@ -230,6 +219,34 @@ class Visio:
     def activate_start_drawing(self):
         self.activate_draw("start")
 
+    def depthsearch(self):
+        if self.maze.start:
+            d = DepthSearch(self.maze)
+            d.start()
+
+    def widesearch(self):
+        if self.maze.start:
+            w = WideSearch(self.maze)
+            w.start()
+
+    def reset_search(self):
+        for i in range(len(self.maze.maze)):
+            for j in range(len(self.maze.maze[i])):
+                if type(self.maze.maze[i][j]) == Visited or type(self.maze.maze[i][j]) == Way:
+                    self.maze.maze[i][j] = None
+
+    def reset_expect_wall(self):
+        for i in range(len(self.maze.maze)):
+            for j in range(len(self.maze.maze[i])):
+                if type(self.maze.maze[i][j]) != Wall:
+                    self.maze.maze[i][j] = None
+        self.maze.start = None
+        self.maze.target = None
+
+    def reset(self):
+        self.maze = Maze(size=self.maze.size)
+        self.maze.start = None
+        self.maze.target = None
 
 if __name__ == '__main__':
     v = Visio()
