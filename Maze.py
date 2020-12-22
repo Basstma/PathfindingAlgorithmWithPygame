@@ -11,13 +11,6 @@ class Maze:
         self.maze = [[None for i in range(self.size[0])] for j in range(self.size[1])]
         self.delay = 0
 
-        """for i in range(self.size[1]):
-            for j in range(self.size[0]):
-                if i == 0 or i == self.size[1]-1:
-                    self.maze[i][j] = Wall(x=j, y=i)
-                if j == 0 or j == self.size[0]-1:
-                    self.maze[i][j] = Wall(x=j, y=i)"""
-
         self.pos = {}
 
     def build(self):
@@ -91,6 +84,7 @@ class Maze:
             y = self.size[1] - 1
 
         self.maze[y][x] = Target(x=x, y=y)
+        print("Target added", x, y)
 
 
 if __name__ == '__main__':
