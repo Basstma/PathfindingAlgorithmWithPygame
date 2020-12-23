@@ -25,9 +25,6 @@ class Visio:
 
         self.running = True
 
-        self.time_steps = [0.00001, 0.0001, 0.001, 0.01, 0.1]
-        self.time_pos = 0
-
         self.colors = {
             "black": (0, 0, 0),
             "white": (255, 255, 255),
@@ -49,6 +46,11 @@ class Visio:
             "start": False,
         }
 
+        self.time_steps = [0, 0.00001, 0.0001, 0.001, 0.01, 0.1]
+        self.time_pos = 0
+        self.time_rectangles = [Rectangle((self.window_size[0] - 10, 5), (5, 5), self.colors["white"])]
+        self.maze.delay = self.time_steps[self.time_pos]
+
         self.clock = pg.time.Clock()
         self.screen = pg.display.set_mode(self.window_size)
         self.FPS = 60
@@ -61,56 +63,20 @@ class Visio:
             Button((50, 30), (40, 20), self.colors["blue_depthsearch"], function=self.widesearch),  # Button for depthserch
             Button((5, 55), (40, 20), self.colors["yellow"], function=self.maze.build),  # Button for Build Maze draw
             Button((50, 55), (40, 20), self.colors["grey_three"], function=self.reset_search),  # Button for remove everything from an search
-            Button((140, 55), (40, 20), self.colors["grey_three"], function=self.reset_expect_wall),  # Button for remove everything excpect walls
-            Button((95, 55), (40, 20), self.colors["grey_three"], function=self.reset),  # Button for reseting
+            Button((95, 55), (40, 20), self.colors["grey_three"], function=self.reset_expect_wall),  # Button for remove everything excpect walls
+            Button((140, 55), (40, 20), self.colors["grey_three"], function=self.reset),  # Button for reseting
+            Button((self.window_size[0]-60, 5), (40, 20), self.colors["grey_three"], function=self.change_timedelay),  # Button for change Time
         ]
-
-    def build_naviagation(self):
-        for button in self.buttons:
-            button.draw(self.screen)
-
-        pg.draw.line(self.screen,
-                     color=self.colors["white"],
-                     start_pos=(0, self.navbar_size[1] - 2),
-                     end_pos=(self.window_size[0], self.navbar_size[1] - 2),
-                     width=2)
 
     def check_button_is_clicked(self, click_pos):
         for button in self.buttons:
             if button.is_clicked(click_pos):
                 button.action()
 
-    def draw_map(self):
-        def draw_rectangle_maze(pos: list, color: str):
-            pg.draw.rect(self.screen, self.colors[color],
-                         (pos[0] * self.scale, (pos[1] * self.scale) + self.navbar_size[1], self.scale, self.scale))
-
-        for i in range(0, self.maze.size[1]):
-            for j in range(0, self.maze.size[0]):
-                if type(self.maze.maze[i][j]) == Wall:
-                    draw_rectangle_maze((j, i), "white")
-                elif type(self.maze.maze[i][j]) == Target:
-                    draw_rectangle_maze((j, i), "red")
-
-                elif type(self.maze.maze[i][j]) == Visited:
-                    draw_rectangle_maze((j, i), "grey_one")
-
-                elif type(self.maze.maze[i][j]) == Way:
-                    draw_rectangle_maze((j, i), "turquoise")
-
-                elif type(self.maze.maze[i][j]) == Start:
-                    draw_rectangle_maze((j, i), "green")
-
-                else:
-                    draw_rectangle_maze((j,i), "black")
-
     def run(self):
         while self.running:
             self.screen.fill(self.colors["black"])
             for event in pg.event.get():
-                if event.type == pg.KEYDOWN:
-                    if event.key == pg.K_t:
-                        self.change_timedelay()
                 if event.type == pg.MOUSEBUTTONDOWN:
                     pos = pg.mouse.get_pos()
                     if pos[1] < self.navbar_size[1]:
@@ -127,15 +93,51 @@ class Visio:
             self.clock.tick(self.FPS)
 
     def display(self):
-        self.build_naviagation()
-        self.draw_map()
+        for button in self.buttons:
+            button.draw(self.screen)
+
+        pg.draw.line(self.screen,
+                     color=self.colors["white"],
+                     start_pos=(0, self.navbar_size[1] - 2),
+                     end_pos=(self.window_size[0], self.navbar_size[1] - 2),
+                     width=2)
+
+        def draw_rectangle_maze(pos: list, color: str):
+            pg.draw.rect(self.screen, self.colors[color],
+                         (pos[0] * self.scale, (pos[1] * self.scale) + self.navbar_size[1], self.scale, self.scale))
+
+        for i in range(0, self.maze.size[1]):
+            for j in range(0, self.maze.size[0]):
+                if type(self.maze.maze[i][j]) == Wall:
+                    draw_rectangle_maze((j, i), "white")
+
+                elif type(self.maze.maze[i][j]) == Target:
+                    draw_rectangle_maze((j, i), "red")
+
+                elif type(self.maze.maze[i][j]) == Visited:
+                    draw_rectangle_maze((j, i), "grey_one")
+
+                elif type(self.maze.maze[i][j]) == Way:
+                    draw_rectangle_maze((j, i), "turquoise")
+
+                elif type(self.maze.maze[i][j]) == Start:
+                    draw_rectangle_maze((j, i), "green")
+
+                else:
+                    draw_rectangle_maze((j, i), "black")
+        for rectangle in self.time_rectangles:
+            rectangle.draw(self.screen)
 
     def change_timedelay(self):
         self.time_pos += 1
         if self.time_pos >= len(self.time_steps):
             self.time_pos = 0
-        print("Delay auf:", self.time_steps[self.time_pos])
         self.maze.delay = self.time_steps[self.time_pos]
+        self.time_rectangles = []
+        for i in range(0, len(self.time_steps)+(self.time_pos + 1 - len(self.time_steps))):
+            self.time_rectangles.append(
+                Rectangle((self.window_size[0] - 10, 5 + i * 5 + i * 2), (5, 5), self.colors["white"])
+            )
 
     def handl_start(self, event, pos):
         if self.maze.start:
@@ -143,7 +145,7 @@ class Visio:
             while is_hold:
                 if event.button == 1:
                     x, y = self.get_position_in_maze(pos)
-                    self.maze.move_start(x, y)
+                    self.maze.move_object(self.maze.start, x, y)
                 for e in pg.event.get():
                     if e.type == pg.MOUSEBUTTONUP:
                         is_hold = False
@@ -162,7 +164,7 @@ class Visio:
             while is_hold:
                 if event.button == 1:
                     x, y = self.get_position_in_maze(pos)
-                    self.maze.move_target(x, y)
+                    self.maze.move_object(self.maze.target, x, y)
                 for e in pg.event.get():
                     if e.type == pg.MOUSEBUTTONUP:
                         is_hold = False
@@ -208,7 +210,6 @@ class Visio:
         for k in self.active_drawing.keys():
             self.active_drawing[k] = False
         self.active_drawing[kind] = True
-        print(self.active_drawing)
 
     def activate_manual_drawing(self):
         self.activate_draw("mannual")

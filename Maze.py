@@ -77,17 +77,11 @@ class Maze:
         self.start = Start(x=x, y=y)
         self.maze[y][x] = self.start
 
-    def move_start(self, nx, ny):
-        x, y = self.start.get_coordinates()
-        self.start.set_coordinates(nx, ny)
+    def move_object(self, movable, nx, ny):
+        x, y = movable.get_coordinates()
+        movable.set_coordinates(nx, ny)
         self.maze[y][x] = None
-        self.maze[ny][nx] = self.start
-
-    def move_target(self, nx, ny):
-        x, y = self.target.get_coordinates()
-        self.target.set_coordinates(nx, ny)
-        self.maze[y][x] = None
-        self.maze[ny][nx] = self.target
+        self.maze[ny][nx] = movable
 
 if __name__ == '__main__':
     m = Maze(size=(10, 10))
