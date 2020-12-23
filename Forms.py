@@ -11,6 +11,10 @@ class Rectangle:
         (self.pos[0], self.pos[1], self.size[0], self.size[1])
         pg.draw.rect(screen, self.color, (self.pos[0], self.pos[1], self.size[0], self.size[1]))
 
+    # def draw_text(self, text):
+    #     middl = (self.size[0]/2),
+    #     for e in text.upper():
+
 
 class Button(Rectangle):
     def __init__(self, pos: list, size: list, color: list, function):
