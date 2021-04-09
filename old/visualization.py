@@ -14,7 +14,7 @@ class Visio:
     def __init__(self):
         self.scale = 10
 
-        self.window_size = (500, 500)
+        self.window_size = (1000, 1000)
 
         self.navbar_size = (self.window_size[0], 100)
         self.maze = Maze(
