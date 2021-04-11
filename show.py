@@ -25,15 +25,14 @@ class Display:
             self.display()
             self.clock.tick(self.FPS)
             if i == 5:
-                print("Build Maze")
+                #print("Build Maze")
                 self.maze.build_maze("binary_tree")
-                print("Maze is build")
+                #print("Maze is build")
             i += 1
 
     def display(self):
 
         def draw_rectangle(pos: list, color: str):
-            print(pos)
             pg.draw.rect(self.screen, colors[color],
                          (pos[0] * self.scale, (pos[1] * self.scale), self.scale, self.scale))
 

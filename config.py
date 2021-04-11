@@ -1,3 +1,8 @@
+import numpy as np
+
+np.random.seed = 42
+
+
 colors = {
     "black": (0, 0, 0),
     "white": (255, 255, 255),
