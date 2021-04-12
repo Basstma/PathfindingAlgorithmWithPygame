@@ -1,4 +1,9 @@
 import numpy as np
 
-for i in range(0, 20):
-    print(np.random.randint(0,2))
+arr = [i for i in range(0, 10)]
+
+print(arr)
+
+arr.pop(2)
+
+print(arr)
