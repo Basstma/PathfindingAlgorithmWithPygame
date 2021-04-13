@@ -29,10 +29,20 @@ class Display:
 
         for i in range(0, self.maze.size[0]):
             for j in range(0, self.maze.size[1]):
-                if self.maze.maze[j][i] == 1:
+                if self.maze.maze[i][j] == 0:
+                    draw_rectangle((i, j), color="black")
+                elif self.maze.maze[i][j] == 1:
                     draw_rectangle((i, j), color="white")
-                elif self.maze.maze[j][i] == 2:
+                elif self.maze.maze[i][j] == 2:
                     draw_rectangle((i, j), color="blue")
+                elif self.maze.maze[i][j] == 3:
+                    draw_rectangle((i, j), color="green")
+                elif self.maze.maze[i][j] == 4:
+                    draw_rectangle((i, j), color="red")
+                elif self.maze.maze[i][j] == 5:
+                    draw_rectangle((i, j), color="blue_widesearch")
+                elif self.maze.maze[i][j] == 11:
+                    draw_rectangle((i, j), color="grey_three")
 
 
 if __name__ == '__main__':

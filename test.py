@@ -1,9 +1,13 @@
 import numpy as np
 
-arr = [i for i in range(0, 10)]
+arr = np.zeros((10, 10))
 
 print(arr)
 
-arr.pop(2)
+arr[-1:] = 1
+
+print(arr)
+
+arr[:,-1:] = 1
 
 print(arr)

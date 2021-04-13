@@ -53,6 +53,9 @@ class Maze:
                     self.maze[to_wall[0]][to_wall[1]] = 1.
                 if self.delay:
                     time.sleep(self.delay)
+
+        self.fix_outer_row()
+        self.add_target()
         self.active_prozess = False
 
     def prims(self):
@@ -99,10 +102,18 @@ class Maze:
             time.sleep(self.delay)
 
             points.pop(index)
-
+        self.fix_outer_row()
+        self.add_target()
         self.active_prozess = False
 
+    def fix_outer_row(self):
+        if self.size[0] % 2 == 0:
+            self.maze[-1:] = 1
+        if self.size[1] % 2 == 0:
+            self.maze[:, -1:] = 1
 
+    def add_target(self, coordinates: tuple = (100, 100)):
+        self.maze[self.size[0] - 1][self.size[1] - 1] = 4
 if __name__ == '__main__':
     maze = Maze()
     maze.build_maze("binary_tree")

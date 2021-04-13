@@ -1,6 +1,6 @@
 import numpy as np
 
-np.random.seed(seed=52)
+np.random.seed(seed=1)
 
 
 colors = {
