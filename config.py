@@ -16,5 +16,6 @@ colors = {
     "turquoise": (0, 255, 255),
     "grey_one": (50, 50, 50),
     "grey_two": (100, 100, 100),
-    "grey_three": (150, 150, 150)
+    "grey_three": (150, 150, 150),
+    "grey_light": (240, 240, 240),
 }

@@ -28,8 +28,10 @@ class Controll:
 
         self.wide_search_button = tk.Button(self.root, text="WideSearch", command=self.start_wide_search)
         self.depth_search_button = tk.Button(self.root, text="DepthSearch", command=self.start_depth_search)
+        self.dijkstra_search_button = tk.Button(self.root, text="DijkstraSearch", command=self.start_dijkstra_search)
 
         self.clear_button = None
+        self.clear_except_walls_button = None
         self.stop_button = tk.Button(self.root, text="Quit", command=self.stop)
 
         self.size_label.grid(row=0, column=0)
@@ -54,7 +56,9 @@ class Controll:
 
         scale = int(self.scale_entry.get() if self.scale_entry.get() else 10)
 
-        if not x or not y:
+        if x and y:
+            pass
+        else:
             x, y = 101, 101
 
         self.maze = Maze(size=(y, x))
@@ -62,6 +66,7 @@ class Controll:
             self.maze.set_delay(delay)
 
         self.clear_button = tk.Button(self.root, text="Clear", command=self.maze.clear)
+        self.clear_except_walls_button = tk.Button(self.root, text="ClearExceptWalls", command=self.maze.clear_except_walls)
 
         self.display = Display(maze=self.maze, scale=scale)
         self.navigation()
@@ -92,8 +97,10 @@ class Controll:
 
         self.wide_search_button.grid(row=2, column=0)
         self.depth_search_button.grid(row=2, column=1)
+        self.dijkstra_search_button.grid(row=2, column=2)
 
-        self.clear_button.grid(row=10, column=0)
+        self.clear_button.grid(row=9, column=0)
+        self.clear_except_walls_button.grid(row=9, column=1)
         self.stop_button.grid(row=10, column=2)
 
     def start_binary_tree_build(self):
@@ -108,6 +115,10 @@ class Controll:
 
     def start_depth_search(self):
         solver = DepthSearchSolver(self.maze, (1, 1), 4)
+        solver.run()
+
+    def start_dijkstra_search(self):
+        solver = DijkstraSolver(self.maze, (1, 1), 4)
         solver.run()
 
     def change_delay(self):

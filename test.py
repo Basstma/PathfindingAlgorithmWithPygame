@@ -1,13 +1,4 @@
-import numpy as np
+d = {"1": 11, "2": 22}
 
-arr = np.zeros((10, 10))
-
-print(arr)
-
-arr[-1:] = 1
-
-print(arr)
-
-arr[:,-1:] = 1
-
-print(arr)
+for p in d:
+    print(type(p))

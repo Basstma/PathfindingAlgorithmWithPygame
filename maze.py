@@ -10,12 +10,21 @@ class Maze:
         self.delay = 0
         self.active_prozess = False
 
-    def set_delay(self, delay: int):
+        self.steps_to_solve = 0
+
+    def set_delay(self, delay: float):
         self.delay = delay
 
     def clear(self):
         if not self.active_prozess:
             self.maze = self.maze = np.zeros(self.size)
+
+    def clear_except_walls(self):
+        for i in range(0, self.size[0]):
+            for j in range(0, self.size[1]):
+                if self.maze[i][j] != 0:
+                    self.maze[i][j] = 1
+        self.add_target()
 
     def build_maze(self, kind_of_algorithm: str, start_as_thread: bool=True):
         if not self.active_prozess:
@@ -79,7 +88,6 @@ class Maze:
                     self.maze[starting_point[0] + 2][starting_point[1]] = 2
                     points.append((starting_point[0] + 2, starting_point[1]))
 
-
             # Build Ways
             self.maze[starting_point[0]][starting_point[1]] = 1
 
@@ -114,6 +122,8 @@ class Maze:
 
     def add_target(self, coordinates: tuple = (100, 100)):
         self.maze[self.size[0] - 1][self.size[1] - 1] = 4
+
+
 if __name__ == '__main__':
     maze = Maze()
     maze.build_maze("binary_tree")
