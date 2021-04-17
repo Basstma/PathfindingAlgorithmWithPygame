@@ -41,10 +41,11 @@ class Display:
                     draw_rectangle((i, j), color="red")
                 elif self.maze.maze[i][j] == 5:
                     draw_rectangle((i, j), color="blue_widesearch")
+                elif self.maze.maze[i][j] == 6:
+                    draw_rectangle((i, j), color="grey_light")
                 elif self.maze.maze[i][j] == 11:
                     draw_rectangle((i, j), color="grey_three")
-                elif self.maze.maze[i][j] == 6:
-                    draw_rectangle((i, j), color="blue")
+
 
 
 if __name__ == '__main__':

@@ -19,3 +19,6 @@ colors = {
     "grey_three": (150, 150, 150),
     "grey_light": (240, 240, 240),
 }
+
+
+colors_no_barrier = (1, 3, 4, 6)

@@ -12,6 +12,9 @@ class Maze:
 
         self.steps_to_solve = 0
 
+        self.target = None
+        self.start = None
+
     def set_delay(self, delay: float):
         self.delay = delay
 
@@ -36,12 +39,20 @@ class Maze:
                     self.binary_tree()
                 self.active_prozess = True
 
-            if kind_of_algorithm == "prims":
+            elif kind_of_algorithm == "prims":
                 if start_as_thread:
                     prims_thread =Thread(target=self.prims)
                     prims_thread.start()
                 else:
                     self.prims()
+                self.active_prozess = True
+
+            elif kind_of_algorithm == "depth_search":
+                if start_as_thread:
+                    depth_search_thread = Thread(target=self.depth_search_builder)
+                    depth_search_thread.start()
+                else:
+                    self.depth_search_builder()
                 self.active_prozess = True
 
     def binary_tree(self):
@@ -122,6 +133,7 @@ class Maze:
 
     def add_target(self, coordinates: tuple = (100, 100)):
         self.maze[self.size[0] - 1][self.size[1] - 1] = 4
+        self.target = (self.size[0] - 1, self.size[1] - 1)
 
 
 if __name__ == '__main__':

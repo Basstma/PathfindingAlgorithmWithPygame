@@ -70,40 +70,52 @@ class Solver:
             if self.maze.size[1] > x + 1:
                 if self.maze.maze[y][x + 1] == 1 or self.maze.maze[y][x + 1] == 6:
                     w4 = True
-
             return ((w1 and w2) and not (w3 or w4)) or ((w3 and w4) and not (w1 or w2))
 
+        self.maze.maze[self.maze.target[0]][self.maze.target[1]] = 1
         last_element = None
         graphs = {}
         for i in range(0, self.maze.size[0]):
             for j in range(0, self.maze.size[1]):
-                if self.maze.maze[i][j] == 1:
+                if self.maze.maze[i][j] == 1:# or self.maze.maze[i][j] == 4:
                     # Visualisation
                     if last_element:
                         if self.maze.maze[last_element[0][0]][last_element[0][1]] != 6:
                             self.maze.maze[last_element[0][0]][last_element[0][1]] = last_element[1]
                     last_element = ((i, j), self.maze.maze[i][j])
                     self.maze.maze[i][j] = 11
-
                     if not is_edge(i, j):
                         g = Graph((i, j))
                         graphs[str(g)] = g
                         self.maze.maze[i][j] = 6
                     time.sleep(self.maze.delay)
-        self.maze.maze[last_element[0][0]][last_element[0][1]] = last_element[1]
+        if last_element:
+            if self.maze.maze[last_element[0][0]][last_element[0][1]] != 6:
+                self.maze.maze[last_element[0][0]][last_element[0][1]] = last_element[1]
 
         edges = {}
         # Find Edges
+
         for graph in graphs.keys():
             for move_direction in ((-1, 0), (1, 0), (0, -1), (0, 1)):
-                if self.maze.size[0] > graphs[graph].y + move_direction[1] >= 0 and self.maze.size[1] > graphs[graph].x + move_direction[1] >= 0:
-                    length = 0
-                    while self.maze.maze[graphs[graph].y + move_direction[0]][graphs[graph].x + move_direction[1]] != 6:
+                if (self.maze.size[0] > graphs[graph].y + move_direction[0] >= 0) and \
+                        (self.maze.size[1] > graphs[graph].x + move_direction[1] >= 0) and \
+                        (self.maze.maze[graphs[graph].y + move_direction[0]][graphs[graph].x + move_direction[1]] in (1., 4., 6.)):
+                    length = 1
+                    x = graphs[graph].x + move_direction[1]
+                    y = graphs[graph].y + move_direction[0]
+                    last_element = ((y, x), self.maze.maze[y][x])
+                    while not (self.maze.maze[y][x] == 6 or self.maze.maze[y][x] == 4):
+                        x += move_direction[1]
+                        y += move_direction[0]
                         length += 1
-                    #ToDo: add Edges and add Edges to Graph
-
-
-
+                    self.maze.maze[last_element[0][0]][last_element[0][1]] = last_element[1]
+                    new_edge = Edge(graphs[graph], graphs[str(y) + ':' + str(x)])
+                    new_edge.set_length(length)
+                    graphs[graph].add_edge(graphs[str(y) + ':' + str(x)], new_edge)
+                    edges[str(new_edge)] = new_edge
+                    time.sleep(self.maze.delay)
+        return graphs, edges
 
 
 class WideSearchSolver(Solver):
@@ -165,7 +177,9 @@ class DepthSearchSolver(Solver):
 
 class DijkstraSolver(Solver):
     def dijkstra(self):
-        self.maze_to_graph()
+        graphs, edges = self.maze_to_graph()
+
+        print(edges[list(edges.keys())[0]], edges[list(edges.keys())[0]].get_way())
 
     def run(self):
         running_thread = Thread(target=self.dijkstra)
