@@ -1,15 +1,15 @@
 from maze import Maze
-from linkedlist import Node
+from linkedlist import Node, NodeGraph
 from graph import Graph, Edge
 from threading import Thread
 import time
 
 
 class Solver:
-    def __init__(self, maze: Maze, start: tuple, target: int):
+    def __init__(self, maze: Maze, target: int):
         self.maze = maze
-        self.start = start
-        self.target = target
+        self.start = self.maze.start
+        self.target = self.maze.target
 
     def run(self):
         pass
@@ -126,10 +126,10 @@ class WideSearchSolver(Solver):
         target = None
         nodes = {str(start_node): start_node}
 
-        while self.maze.maze[position[0]][position[1]] != self.target and len(waypoints) != 0:
+        while self.maze.maze[position[0]][position[1]] != 4 and len(waypoints) != 0:
             position = waypoints[0]
             self.maze.steps_to_solve += 1
-            if self.maze.maze[position[0]][position[1]] == self.target:
+            if self.maze.maze[position[0]][position[1]] == 4:
                 target = Node(nodes[str(position[0]) + ':' + str(position[1])], position)
             for point in self.find_possible_next_steps(position):
                 if point not in waypoints:
@@ -155,10 +155,10 @@ class DepthSearchSolver(Solver):
         target = None
         nodes = {str(start_node): start_node}
 
-        while self.maze.maze[position[0]][position[1]] != self.target and len(waypoints) != 0:
+        while self.maze.maze[position[0]][position[1]] != 4 and len(waypoints) != 0:
             position = waypoints[0]
             self.maze.steps_to_solve += 1
-            if self.maze.maze[position[0]][position[1]] == self.target:
+            if self.maze.maze[position[0]][position[1]] == 4:
                 target = Node(nodes[str(position[0]) + ':' + str(position[1])], position)
             for point in self.find_possible_next_steps(position):
                 if point not in waypoints:
@@ -178,8 +178,43 @@ class DepthSearchSolver(Solver):
 class DijkstraSolver(Solver):
     def dijkstra(self):
         graphs, edges = self.maze_to_graph()
+        start = graphs[str(self.maze.start[0]) + ":" + str(self.maze.start[1])]
+        target = graphs[str(self.maze.target[0]) + ":" + str(self.maze.target[1])]
 
-        print(edges[list(edges.keys())[0]], edges[list(edges.keys())[0]].get_way())
+        actual_way = {
+            str(start): NodeGraph(start, None, None)
+        }
+        node_way = {}
+        while str(target) not in actual_way.keys():
+            neares_node = actual_way[min(actual_way, key=lambda k: actual_way[k].get_length())]
+            for edge in neares_node.itself.edges:
+                node_to_add = neares_node.itself.edges[edge].node_two
+                new_node = NodeGraph(node_to_add, neares_node, neares_node.itself.edges[edge])
+
+                # Add only if not in nodes to visit and not in visited nodes
+                if str(new_node.itself) not in list(actual_way.keys()) and \
+                        str(new_node.itself) not in list(node_way.keys()):
+                    new_node.add_length(neares_node.itself.edges[edge].get_length())
+                    actual_way[str(new_node.itself)] = new_node
+
+            node_way[str(neares_node.itself)] = neares_node
+            actual_way.pop(str(neares_node.itself))
+
+        way = []
+        point = actual_way[str(target)]
+        time.sleep(5)
+        while str(point.itself) != str(start):
+            way.append(point)
+            point = point.privious
+        way.append(node_way[str(start)])
+        self.maze.maze[self.maze.target[0]][self.maze.target[1]] = 4
+        for node in way[::-1]:
+            if node.itself and node.privious:
+                edge_way = node.edge.get_way()
+                for wp in edge_way:
+                    self.maze.maze[wp[0]][wp[1]] = 5
+                time.sleep(self.maze.delay)
+
 
     def run(self):
         running_thread = Thread(target=self.dijkstra)

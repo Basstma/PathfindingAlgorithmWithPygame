@@ -135,6 +135,9 @@ class Maze:
         self.maze[self.size[0] - 1][self.size[1] - 1] = 4
         self.target = (self.size[0] - 1, self.size[1] - 1)
 
+    def add_start(self, coordinates: tuple = (100, 100)):
+        self.start = (0, 0)
+
 
 if __name__ == '__main__':
     maze = Maze()

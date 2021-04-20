@@ -64,6 +64,7 @@ class Controll:
         self.maze = Maze(size=(y, x))
         if delay:
             self.maze.set_delay(delay)
+        self.maze.start = (0, 0)
 
         self.clear_button = tk.Button(self.root, text="Clear", command=self.maze.clear)
         self.clear_except_walls_button = tk.Button(self.root, text="ClearExceptWalls", command=self.maze.clear_except_walls)
@@ -110,15 +111,15 @@ class Controll:
         self.display.maze.build_maze(kind_of_algorithm="prims")
 
     def start_wide_search(self):
-        solver = WideSearchSolver(self.maze, (1, 1), 4)
+        solver = WideSearchSolver(self.maze, 4)
         solver.run()
 
     def start_depth_search(self):
-        solver = DepthSearchSolver(self.maze, (1, 1), 4)
+        solver = DepthSearchSolver(self.maze, 4)
         solver.run()
 
     def start_dijkstra_search(self):
-        solver = DijkstraSolver(self.maze, (1, 1), 4)
+        solver = DijkstraSolver(self.maze, 4)
         solver.run()
 
     def change_delay(self):
