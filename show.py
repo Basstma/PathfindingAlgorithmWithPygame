@@ -58,10 +58,13 @@ class Display:
                     draw_rectangle((i, j), color="blue_widesearch")
                 elif self.maze.maze[i][j] == 6:
                     # color for nodes
-                    draw_rectangle((i, j), color="grey_light")
+                    draw_rectangle((i, j), color="grey_four")
                 elif self.maze.maze[i][j] == 11:
                     # color for actual checking point in Graph generation
                     draw_rectangle((i, j), color="grey_three")
+                elif self.maze.maze[i][j] == 12:
+                    # color for actual checking point in Graph generation
+                    draw_rectangle((i, j), color="grey_five")
 
 
 

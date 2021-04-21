@@ -19,7 +19,8 @@ colors = {
     "grey_one": (50, 50, 50),
     "grey_two": (100, 100, 100),
     "grey_three": (150, 150, 150),
-    "grey_light": (240, 240, 240),
+    "grey_four": (220, 220, 220),
+    "grey_five": (230, 230, 0),
 }
 
 

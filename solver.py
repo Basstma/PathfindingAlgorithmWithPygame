@@ -13,7 +13,7 @@ class Solver:
         :param target:
         """
         self.maze = maze
-        #self.start = self.maze.start
+        self.start = self.maze.start
         self.target = self.maze.target
 
     def run(self):
@@ -183,7 +183,7 @@ class Solver:
                     new_edge.set_length(length)
                     graphs[graph].add_edge(graphs[str(y) + ':' + str(x)], new_edge)
                     edges[str(new_edge)] = new_edge
-                    time.sleep(self.maze.delay)
+                    #time.sleep(self.maze.delay)
         return graphs, edges
 
 
@@ -301,10 +301,17 @@ class DijkstraSolver(Solver):
         }
         # node_way contains all already visited nodes
         node_way = {}
+        neares_node = None
 
         while str(target) not in actual_way.keys():
             # Takes the node with smallest length, that isn't visited
             neares_node = actual_way[min(actual_way, key=lambda k: actual_way[k].get_length())]
+
+            #if neares_node.edge:
+            #    way = neares_node.edge.get_way()
+            #    for point in way:
+            #        self.maze.maze[point[0]][point[1]] = 12
+            #    time.sleep(self.maze.delay)
 
             # Create all next possible Nodes, from the actual Node, with the edges that can be go from the actual node
             for edge in neares_node.itself.edges:
@@ -326,7 +333,6 @@ class DijkstraSolver(Solver):
         # For visualisation makes. Start by target, because the linked List works with previous Nodes
         way = []
         point = actual_way[str(target)]
-        time.sleep(5)
 
         # Starts to search for start of maze
         while str(point.itself) != str(start):
@@ -344,6 +350,7 @@ class DijkstraSolver(Solver):
             if node.itself and node.privious:
                 # Visualise each edge with time delay.
                 edge_way = node.edge.get_way()
+                self.maze.maze[node.edge.node_one.y][node.edge.node_one.x] = 2
                 for wp in edge_way:
                     self.maze.maze[wp[0]][wp[1]] = 5
                 time.sleep(self.maze.delay)
