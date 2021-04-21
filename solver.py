@@ -131,7 +131,7 @@ class Solver:
                         if self.maze.maze[last_element[0][0]][last_element[0][1]] != 6:
                             self.maze.maze[last_element[0][0]][last_element[0][1]] = last_element[1]
                     last_element = ((i, j), self.maze.maze[i][j])
-                    time.sleep(self.maze.delay)
+                    #time.sleep(self.maze.delay)
                     # Sets the actual visited point to 11 so its possible to see where the algorithm is actual checking
                     # for nodes
                     self.maze.maze[i][j] = 11
