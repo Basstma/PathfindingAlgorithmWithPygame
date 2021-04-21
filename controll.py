@@ -10,6 +10,7 @@ class Controll:
 
         self.root = tk.Tk()
 
+        # Functions for the
         self.size_label = tk.Label(text="Size of Maze (y, x):")
         self.size_x_entry = tk.Entry()
         self.size_y_entry = tk.Entry()

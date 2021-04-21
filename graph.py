@@ -32,6 +32,10 @@ class Edge:
         return str(self.node_one) + '-' + str(self.node_two)
 
     def get_way(self):
+        """
+        Generates all waypoints that are in the maze and are included in the edge
+        :return: a list of (y, x) coordinates in maze
+        """
         oy = self.node_one.y
         ox = self.node_one.x
         ty = self.node_two.y

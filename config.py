@@ -1,8 +1,10 @@
 import numpy as np
 
+
+# Sets random seed for numpy
 np.random.seed(seed=1)
 
-
+# Defines possible colors for maze, in RGB
 colors = {
     "black": (0, 0, 0),
     "white": (255, 255, 255),
@@ -21,4 +23,5 @@ colors = {
 }
 
 
+# The points that aren't walls
 colors_no_barrier = (1, 3, 4, 6)
