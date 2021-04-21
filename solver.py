@@ -6,14 +6,14 @@ import time
 
 
 class Solver:
-    def __init__(self, maze: Maze):
+    def __init__(self, maze: Maze, target):
         """
         Basic Class for an Solver, that soves the maze
         :param maze:
         :param target:
         """
         self.maze = maze
-        self.start = self.maze.start
+        #self.start = self.maze.start
         self.target = self.maze.target
 
     def run(self):
