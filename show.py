@@ -67,7 +67,6 @@ class Display:
                     draw_rectangle((i, j), color="grey_five")
 
 
-
 if __name__ == '__main__':
     maze = Maze(size=(1000, 1000))
     d = Display(maze, scale=1)

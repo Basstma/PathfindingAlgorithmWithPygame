@@ -17,8 +17,3 @@ in pygame it has the size 1 * scale for x and y length in the pygame display maz
 
 3. Delay: Delay is the time between to steps in an algorithm. It makes it easieser to
 follow the steps that are used in creation and searching.
-   
-## Needed Python Libraries
-1. numpy
-2. pygame
-3. tkinter

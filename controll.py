@@ -55,12 +55,12 @@ class Controll:
 
         delay = float(self.delay_entry.get() if self.delay_entry.get() else 0)
 
-        scale = int(self.scale_entry.get() if self.scale_entry.get() else 40)
+        scale = int(self.scale_entry.get() if self.scale_entry.get() else 10)
 
         if x and y:
             pass
         else:
-            x, y = 11, 11
+            x, y = 101, 101
 
         self.maze = Maze(size=(y, x))
         if delay:

@@ -23,7 +23,9 @@ d = {
 
 print(max(d, key=lambda k: d[k].get_value()))
 """
-
+"""
 l = [1, 2, 3]
 
 print(l[::-1])
+"""
+

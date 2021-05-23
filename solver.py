@@ -301,18 +301,10 @@ class DijkstraSolver(Solver):
         }
         # node_way contains all already visited nodes
         node_way = {}
-        neares_node = None
 
         while str(target) not in actual_way.keys():
             # Takes the node with smallest length, that isn't visited
             neares_node = actual_way[min(actual_way, key=lambda k: actual_way[k].get_length())]
-
-            #if neares_node.edge:
-            #    way = neares_node.edge.get_way()
-            #    for point in way:
-            #        self.maze.maze[point[0]][point[1]] = 12
-            #    time.sleep(self.maze.delay)
-
             # Create all next possible Nodes, from the actual Node, with the edges that can be go from the actual node
             for edge in neares_node.itself.edges:
                 node_to_add = neares_node.itself.edges[edge].node_two

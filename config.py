@@ -2,7 +2,7 @@ import numpy as np
 
 
 # Sets random seed for numpy
-np.random.seed(seed=1)
+#np.random.seed(seed=1)
 
 # Defines possible colors for maze, in RGB
 colors = {
